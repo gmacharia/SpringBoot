@@ -32,13 +32,18 @@ public class BinFetcherController {
     @GetMapping("/cardnumber/{cardnumber}")
     public String validateBinList(@PathVariable String cardnumber) {
 
-        RestTemplate restTemplate = new RestTemplate();
+        RestTemplate restTemplate;
+        try {
+            restTemplate = new RestTemplate();
 
-        logger.debug(appName + " Sending 'POST' request to URL : " + Constants.URL);
+            logger.debug(appName + " Sending 'POST' request to URL : " + Constants.URL);
 
-        result = restTemplate.getForObject(Constants.URL + cardnumber, String.class);
+            result = restTemplate.getForObject(Constants.URL + cardnumber, String.class);
 
-        logger.debug(appName + " Response from Bin Validator : " + result);
+            logger.debug(appName + " Response from Bin Validator : " + result);
+        } catch (Exception ex) {
+            logger.error(appName + " Error Message : " + ex.getMessage());
+        }
         return result;
     }
 }
