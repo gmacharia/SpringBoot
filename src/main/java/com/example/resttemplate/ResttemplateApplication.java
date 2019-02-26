@@ -1,5 +1,6 @@
 package com.example.resttemplate;
 
+import com.example.resttemplate.model.CardDetails;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +22,11 @@ public class ResttemplateApplication {
     @Bean
     public WebClient.Builder gerWebClientBuilder() {
         return WebClient.builder();
+    }
+    
+    @Bean
+    public CardDetails getCardDetails() {
+        return new CardDetails();
     }
 
 }

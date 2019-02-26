@@ -5,6 +5,7 @@
  */
 package com.example.resttemplate.parser;
 
+import com.example.resttemplate.model.CardDetails;
 import com.example.resttemplate.utils.Constants;
 import java.util.Arrays;
 import org.slf4j.Logger;
@@ -19,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -39,6 +41,9 @@ public class BinFetcherController {
 
     @Autowired
     private WebClient.Builder webClientBuilder;
+
+    @Autowired
+    private CardDetails cardDetails;
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -72,10 +77,12 @@ public class BinFetcherController {
             result = response.getBody();
 
             logger.debug(appName + " Response from Bin Validator : " + result);
+            
+            return result;
         } catch (Exception ex) {
             logger.error(appName + " Error Message : " + ex.getMessage());
-        }
-        return result;
+            throw ex;            
+        }        
     }
 
     //option without headers
@@ -90,29 +97,32 @@ public class BinFetcherController {
             result = restTemplate.getForObject(Constants.URL + cardnumber, String.class);
 
             logger.debug(appName + " Response from Bin Validator : " + result);
+            
+            return result;
         } catch (Exception ex) {
             logger.error(appName + " Error Message : " + ex.getMessage());
+            throw ex;    
         }
-        return result;
     }
 
     //using web client builder
     @GetMapping("/bin/cardnumber/webclient/{cardnumber}")
-    public String validateCard(@PathVariable String cardnumber) {
+    public CardDetails validateCard(@PathVariable String cardnumber) {
         try {
-            result = webClientBuilder.build()
+            cardDetails = webClientBuilder.build()
                     .get()
-                    .uri(Constants.URL + cardnumber, String.class)
+                    .uri(Constants.URL + cardnumber, CardDetails.class)
                     .retrieve()
-                    .bodyToMono(String.class)
+                    .bodyToMono(CardDetails.class)
                     .block();
 
             logger.debug(appName + " Sending 'POST' request to URL : " + Constants.URL);
 
             logger.debug(appName + " Response from Bin Validator : " + result);
-        } catch (Exception ex) {
+            return cardDetails;
+        } catch (HttpClientErrorException ex) {
             logger.error(appName + " Error Message : " + ex.getMessage());
+            throw ex;
         }
-        return result;
     }
 }
