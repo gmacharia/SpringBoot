@@ -78,11 +78,11 @@ public class BinFetcherController {
 
             logger.debug(appName + " Response from Bin Validator : " + result);
             
-            return result;
         } catch (Exception ex) {
             logger.error(appName + " Error Message : " + ex.getMessage());
             throw ex;            
-        }        
+        }      
+        return result;
     }
 
     //option without headers
@@ -96,13 +96,13 @@ public class BinFetcherController {
 
             result = restTemplate.getForObject(Constants.URL + cardnumber, String.class);
 
-            logger.debug(appName + " Response from Bin Validator : " + result);
+            logger.debug(appName + " Response from Bin Validator : " + result);            
             
-            return result;
         } catch (Exception ex) {
             logger.error(appName + " Error Message : " + ex.getMessage());
             throw ex;    
         }
+        return result;
     }
 
     //using web client builder
@@ -119,10 +119,11 @@ public class BinFetcherController {
             logger.debug(appName + " Sending 'POST' request to URL : " + Constants.URL);
 
             logger.debug(appName + " Response from Bin Validator : " + result);
-            return cardDetails;
+            
         } catch (HttpClientErrorException ex) {
             logger.error(appName + " Error Message : " + ex.getMessage());
             throw ex;
         }
+        return cardDetails;
     }
 }
