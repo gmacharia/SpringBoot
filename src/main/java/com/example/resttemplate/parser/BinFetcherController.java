@@ -45,15 +45,15 @@ public class BinFetcherController {
     @Autowired
     private CardDetails cardDetails;
 
+    private HttpHeaders headers;
+    private HttpEntity<String> entity;
+    private ResponseEntity<String> response;
+
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @GetMapping("/cardnumber/{cardnumber}")
     public String validateBinList(@PathVariable String cardnumber) {
 
-        HttpHeaders headers;
-        RestTemplate restTemplate;
-        HttpEntity<String> entity;
-        ResponseEntity<String> response;
         try {
 
             // HttpHeaders
@@ -66,8 +66,6 @@ public class BinFetcherController {
             // HttpEntity<String>: To get result as String.
             entity = new HttpEntity<>(headers);
 
-            // RestTemplate
-            restTemplate = new RestTemplate();
             logger.debug(appName + " Sending 'POST' request to URL : " + Constants.URL);
 
             // Send request with GET method, and Headers.
@@ -77,11 +75,11 @@ public class BinFetcherController {
             result = response.getBody();
 
             logger.debug(appName + " Response from Bin Validator : " + result);
-            
+
         } catch (Exception ex) {
             logger.error(appName + " Error Message : " + ex.getMessage());
-            throw ex;            
-        }      
+            throw ex;
+        }
         return result;
     }
 
@@ -90,17 +88,15 @@ public class BinFetcherController {
     public String validateCardData(@PathVariable String cardnumber) {
 
         try {
-            restTemplate = new RestTemplate();
-
             logger.debug(appName + " Sending 'POST' request to URL : " + Constants.URL);
 
             result = restTemplate.getForObject(Constants.URL + cardnumber, String.class);
 
-            logger.debug(appName + " Response from Bin Validator : " + result);            
-            
+            logger.debug(appName + " Response from Bin Validator : " + result);
+
         } catch (Exception ex) {
             logger.error(appName + " Error Message : " + ex.getMessage());
-            throw ex;    
+            throw ex;
         }
         return result;
     }
@@ -114,12 +110,12 @@ public class BinFetcherController {
                     .uri(Constants.URL + cardnumber, CardDetails.class)
                     .retrieve()
                     .bodyToMono(CardDetails.class)
-                    .block();
+                    .block(); //converts to async
 
             logger.debug(appName + " Sending 'POST' request to URL : " + Constants.URL);
 
             logger.debug(appName + " Response from Bin Validator : " + result);
-            
+
         } catch (HttpClientErrorException ex) {
             logger.error(appName + " Error Message : " + ex.getMessage());
             throw ex;
