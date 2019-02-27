@@ -5,6 +5,8 @@
  */
 package com.example.resttemplate.model;
 
+import com.google.gson.Gson;
+
 /**
  *
  * @author kobe
@@ -74,5 +76,10 @@ public class CardDetails {
 
     public void setBank(Bank bank) {
         this.bank = bank;
+    }
+    
+    @Override
+    public String toString() {
+        return new Gson().toJson(this);
     }
 }
