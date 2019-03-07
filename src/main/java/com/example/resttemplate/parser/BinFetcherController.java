@@ -66,7 +66,7 @@ public class BinFetcherController {
             // HttpEntity<String>: To get result as String.
             entity = new HttpEntity<>(headers);
 
-            logger.info(appName + "--> Sending 'POST' request to URL : " + Constants.URL);
+            logger.info(appName + " --> Sending 'POST' request to URL : " + Constants.URL);
 
             // Send request with GET method, and Headers.
             response = restTemplate.exchange(Constants.URL + cardnumber,
@@ -74,7 +74,7 @@ public class BinFetcherController {
 
             result = response.getBody();
 
-            logger.info(appName + "<-- Response from Bin Validator : " + result);
+            logger.info(appName + " <-- Response from Bin Validator : " + result);
 
         } catch (Exception ex) {
             logger.error(appName + " Error Message : " + ex.getMessage());
@@ -88,11 +88,11 @@ public class BinFetcherController {
     public String validateCardData(@PathVariable String cardnumber) {
 
         try {
-            logger.info(appName + "--> Sending 'POST' request to URL : " + Constants.URL);
+            logger.info(appName + " --> Sending 'POST' request to URL : " + Constants.URL);
 
             result = restTemplate.getForObject(Constants.URL + cardnumber, String.class);
 
-            logger.info(appName + "<-- Response from Bin Validator : " + result);
+            logger.info(appName + " <-- Response from Bin Validator : " + result);
 
         } catch (Exception ex) {
             logger.error(appName + " Error Message : " + ex.getMessage());
@@ -112,9 +112,9 @@ public class BinFetcherController {
                     .bodyToMono(CardDetails.class)
                     .block(); //converts to async
 
-            logger.info(appName + "--> Sending 'POST' request to URL : " + Constants.URL);
+            logger.info(appName + " --> Sending 'POST' request to URL : " + Constants.URL);
 
-            logger.info(appName + "<-- Response from Bin Validator : " + cardDetails.toString());
+            logger.info(appName + " <-- Response from Bin Validator : " + cardDetails.toString());
 
         } catch (HttpClientErrorException ex) {
             logger.error(appName + " Error Message : " + ex.getMessage());

@@ -20,7 +20,7 @@ public class CardDetails {
 
     protected Number number;
     protected Country country;
-    private Bank bank;
+    protected Bank bank;
 
     public String getScheme() {
         return scheme;
